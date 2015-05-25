@@ -11,7 +11,7 @@ gulp.task('build', function () {
 	.pipe(uglify())
 	.pipe(wrapper({
 		header: `(function () {`,
-		footer: `});`
+		footer: `}());`
 	}))
 	.pipe(gulp.dest('dist'))
 });

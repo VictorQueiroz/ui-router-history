@@ -65,12 +65,7 @@ function $StateHistoryProvider () {
 angular.module('ui-router-history', ['ui.router'])
 .provider('$stateHistory', $StateHistoryProvider)
 .run(function ($rootScope, $stateHistory) {
-	$rootScope.$on('$stateChangeStart', function () {
-		$stateHistory.transitionState = true;
-	});
 	$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-		$stateHistory.transitionState = false;
-
 		if($stateHistory.isHistoryLocked()) {
 			return $stateHistory.unlockHistory();
 		}

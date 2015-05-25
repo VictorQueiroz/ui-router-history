@@ -130,12 +130,14 @@ describe('ui-router-history', function () {
 
 			assert.equal(false, $stateHistory.isHistoryLocked());
 
+			var currentSt = $state.current;
+
 			$state.go('a');
 			$rootScope.$digest();
 
 			assert.equal(2, $stateHistory.getHistory().length);
 
-			$state.go('a.b');
+			$state.go('b');
 			$rootScope.$digest();
 			
 			assert.equal(3, $stateHistory.getHistory().length);
@@ -143,10 +145,16 @@ describe('ui-router-history', function () {
 			$stateHistory.back();
 			assert.ok($stateHistory.isHistoryLocked());
 			$rootScope.$digest();
+
 			assert.equal(false, $stateHistory.isHistoryLocked());
 			
 			assert.equal(2, $stateHistory.getHistory().length);
 			assert.equal('a', $state.current.name);
+
+			$stateHistory.back();
+			$rootScope.$digest();
+
+			assert.equal(currentSt.name, $state.current.name);
 		});
 	});
 });
