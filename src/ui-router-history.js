@@ -5,7 +5,14 @@
 
 angular.module('ui-router-history', ['ui.router'])
 .factory('$stateHistory', ['$rootScope', '$state', '$q', function ($rootScope, $state, $q) {
-	
+	var $stateHistory = {
+		setLastState:    setLastState,
+		getLastState:    getLastState,
+		lockHistory:     lockHistory,
+		unlockHistory:   unlockHistory,
+		isHistoryLocked: isHistoryLocked
+	};
+
 	var _history_ = [];
 	var _isHistoryLocked_ = false;
 	
@@ -47,20 +54,14 @@ angular.module('ui-router-history', ['ui.router'])
 
 	$stateHistory.getHistory = function () {
 		return _history_;
-	}
+	};
 
 	$stateHistory.clear = function () {
 		_history_ = [];
 	};
 	
-	return {
-		setLastState:    setLastState,
-		getLastState:    getLastState,
-		lockHistory:     lockHistory,
-		unlockHistory:   unlockHistory,
-		isHistoryLocked: isHistoryLocked
-	};
-})
+	return $stateHistory;
+}])
 .run(['$rootScope', '$stateHistory', function ($rootScope, $stateHistory) {
 	$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
 		if($stateHistory.isHistoryLocked()) {

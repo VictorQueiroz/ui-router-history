@@ -11,9 +11,7 @@
   "devDependencies": {
     "gulp": "^3.8.11",
     "gulp-concat": "^2.5.2",
-    "gulp-ng-annotate": "^0.5.3",
     "gulp-uglify": "^1.2.0",
-    "gulp-wrapper": "^1.0.0",
     "karma": "^0.12.32",
     "karma-assert": "^1.0.0",
     "karma-mocha": "^0.1.10",
