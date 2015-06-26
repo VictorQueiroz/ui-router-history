@@ -156,5 +156,71 @@ describe('ui-router-history', function () {
 
 			assert.equal(currentSt.name, $state.current.name);
 		});
+
+		it('should retrieve a state', function () {
+			$stateHistory.clear();
+
+			assert.equal(undefined, $stateHistory.getItem('a.b'));
+
+			$state.go('a.b');
+			$rootScope.$digest()
+
+			$state.go('b');
+			$rootScope.$digest();
+
+			assert.ok($stateHistory.getItem('a.b'));
+
+			$state.go('a');
+			$rootScope.$digest()
+		});
+
+		it('should delete an item by state name', function () {
+			$stateHistory.clear();
+
+			assert.equal(undefined, $stateHistory.getItem('a.b'));
+
+			$state.go('a.b');
+			$rootScope.$digest()
+
+			$state.go('b');
+			$rootScope.$digest();
+
+			assert.ok($stateHistory.getItem('a.b'));
+			assert.ok($stateHistory.removeItem('a.b'));
+
+			assert.throws(function () {
+				assert.ok($stateHistory.removeItem('a.b'));
+			});
+
+			$state.go('a');
+			$rootScope.$digest()
+		});
+
+		it('should delete last state in history', function () {
+			$stateHistory.clear();
+
+			$state.go('a.b');
+			$rootScope.$digest()
+
+			$state.go('b');
+			$rootScope.$digest();
+
+			$state.go('a');
+			$rootScope.$digest()
+
+			var history = $stateHistory.getHistory();
+
+			assert.equal('a', $state.current.name);
+			assert.equal('b', history[0].state.name);
+			assert.equal('a.b', history[1].state.name);
+			assert.equal('', history[2].state.name);
+
+			assert.equal('b', $stateHistory.getLastState().state.name);
+
+			assert.ok($stateHistory.removeLastItem());
+			$rootScope.$digest();
+
+			assert.equal('a.b', $stateHistory.getLastState().state.name);
+		});
 	});
 });
