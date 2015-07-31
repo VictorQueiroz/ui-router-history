@@ -13,6 +13,15 @@ angular.module('ui-router-history-test', [])
 		url: '/c',
 		template: 'My state two'
 	})
+	.state('d', {
+		abstract: true,
+		url: '/e',
+		template: 'My abstract state'
+	})
+	.state('d.f', {
+		url: '/g',
+		template: 'Non abstract for abstract'
+	})
 });
 describe('ui-router-history', function () {
 	var $stateHistory, $compile, $rootScope, $state;
@@ -36,14 +45,14 @@ describe('ui-router-history', function () {
 			bodyEl = $compile(angular.element('<body><div><div ui-view></div></div></body>'))(scope);
 
 			$state.go('a');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
-			assert.equal('', $stateHistory.getLastState().state.name);
+			// assert.equal('', $stateHistory.getLastState().state.name);
 
 			$state.go('a.b');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
-			assert.equal('a', $stateHistory.getLastState().state.name)
+			assert.equal('a', $stateHistory.getLastState().state.name);
 
 			$state.go('b')
 			$rootScope.$digest()
@@ -51,7 +60,7 @@ describe('ui-router-history', function () {
 			assert.equal('a.b', $stateHistory.getLastState().state.name);
 
 			$state.go('a.b')
-			$rootScope.$digest()
+			$rootScope.$digest();
 
 			assert.equal('b', $stateHistory.getLastState().state.name)
 		});
@@ -65,48 +74,48 @@ describe('ui-router-history', function () {
 			bodyEl = $compile(angular.element('<body><div><div ui-view></div></div></body>'))(scope);
 
 			$state.go('a');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
-			assert.equal('', $stateHistory.getLastState().state.name);
+			// assert.equal('', $stateHistory.getLastState().state.name);
 
 			$state.go('a.b');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
-			assert.equal('a', $stateHistory.getLastState().state.name)
+			assert.equal('a', $stateHistory.getLastState().state.name);
 
 			$state.go('b')
-			$rootScope.$digest()
+			$rootScope.$digest();
 			
 			assert.equal('a.b', $stateHistory.getLastState().state.name);
 
 			$state.go('a.b')
-			$rootScope.$digest()
+			$rootScope.$digest();
 
 			assert.equal('b', $stateHistory.getLastState().state.name);
 
-			$stateHistory.clear()
+			$stateHistory.clear();
 
 			assert.equal(0, $stateHistory.getHistory().length)
-		})
+		});
 
 		it('should back to the previous state', function () {
-			$stateHistory.clear()
+			$stateHistory.clear();
 
 			$state.go('a.b');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
 			$state.go('b');
 			$rootScope.$digest();
 
 			$state.go('a');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
 			var history = $stateHistory.getHistory();
 
 			assert.equal('a', $state.current.name);
 			assert.equal('b', history[0].state.name);
 			assert.equal('a.b', history[1].state.name);
-			assert.equal('', history[2].state.name);
+			// assert.equal('', history[2].state.name);
 
 			$stateHistory.back();
 
@@ -135,12 +144,12 @@ describe('ui-router-history', function () {
 			$state.go('a');
 			$rootScope.$digest();
 
-			assert.equal(2, $stateHistory.getHistory().length);
+			assert.equal(1, $stateHistory.getHistory().length);
 
 			$state.go('b');
 			$rootScope.$digest();
 			
-			assert.equal(3, $stateHistory.getHistory().length);
+			assert.equal(2, $stateHistory.getHistory().length);
 
 			$stateHistory.back();
 			assert.ok($stateHistory.isHistoryLocked());
@@ -148,7 +157,7 @@ describe('ui-router-history', function () {
 
 			assert.equal(false, $stateHistory.isHistoryLocked());
 			
-			assert.equal(2, $stateHistory.getHistory().length);
+			assert.equal(1, $stateHistory.getHistory().length);
 			assert.equal('a', $state.current.name);
 
 			$stateHistory.back();
@@ -163,7 +172,7 @@ describe('ui-router-history', function () {
 			assert.equal(undefined, $stateHistory.getItem('a.b'));
 
 			$state.go('a.b');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
 			$state.go('b');
 			$rootScope.$digest();
@@ -171,7 +180,7 @@ describe('ui-router-history', function () {
 			assert.ok($stateHistory.getItem('a.b'));
 
 			$state.go('a');
-			$rootScope.$digest()
+			$rootScope.$digest();
 		});
 
 		it('should delete an item by state name', function () {
@@ -180,7 +189,7 @@ describe('ui-router-history', function () {
 			assert.equal(undefined, $stateHistory.getItem('a.b'));
 
 			$state.go('a.b');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
 			$state.go('b');
 			$rootScope.$digest();
@@ -193,27 +202,27 @@ describe('ui-router-history', function () {
 			});
 
 			$state.go('a');
-			$rootScope.$digest()
+			$rootScope.$digest();
 		});
 
 		it('should delete last state in history', function () {
 			$stateHistory.clear();
 
 			$state.go('a.b');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
 			$state.go('b');
 			$rootScope.$digest();
 
 			$state.go('a');
-			$rootScope.$digest()
+			$rootScope.$digest();
 
 			var history = $stateHistory.getHistory();
 
 			assert.equal('a', $state.current.name);
 			assert.equal('b', history[0].state.name);
 			assert.equal('a.b', history[1].state.name);
-			assert.equal('', history[2].state.name);
+			// assert.equal('', history[2].state.name);
 
 			assert.equal('b', $stateHistory.getLastState().state.name);
 
@@ -221,6 +230,24 @@ describe('ui-router-history', function () {
 			$rootScope.$digest();
 
 			assert.equal('a.b', $stateHistory.getLastState().state.name);
+		});
+
+		it('should NOT register abstract states in history', function () {
+
+			$stateHistory.clear();
+
+			$state.go('a');
+			$rootScope.$digest();
+
+			$state.go('d.f');
+			$rootScope.$digest();
+
+			$state.go('a');
+			$rootScope.$digest();
+
+			var history = $stateHistory.getHistory();
+			assert.equal(history.length, 2);
+			
 		});
 	});
 });

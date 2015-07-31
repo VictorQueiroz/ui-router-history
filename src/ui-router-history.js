@@ -4,7 +4,7 @@
 	'use strict';
 
 	var forEach = angular.forEach,
-			isObject = angular.isObject;
+		isObject = angular.isObject;
 
 	angular.module('ui-router-history', ['ui.router'])
 	.factory('$stateHistory', ['$rootScope', '$state', '$q', function ($rootScope, $state, $q) {
@@ -140,10 +140,12 @@
 				return $stateHistory.unlockHistory();
 			}
 
-			$stateHistory.setLastState({
-				state: fromState,
-				params: fromParams
-			});
+			if (!fromState.abstract) {
+				$stateHistory.setLastState({
+					state: fromState,
+					params: fromParams
+				});
+			}
 		});
 	}]);
 })();
