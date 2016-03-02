@@ -96,7 +96,7 @@
 			 * @description
 			 * Back to the last state of the history
 			 */
-			back: function () {
+			back: function (defaultState, defaultStateParams) {
 				var self = this;
 
 				if(!this.isHistoryLocked()) {
@@ -104,11 +104,20 @@
 				}
 
 				var lastState = this.getLastState();
-				return $state.go(lastState.state.name, lastState.params).then(function () {
-					_history_.splice(_history_.indexOf(lastState), 1);
+                
+                if(lastState) {
+                    return $state.go(lastState.state.name, lastState.params).then(function () {
+                        _history_.splice(_history_.indexOf(lastState), 1);
 
-					self.unlockHistory();
-				});
+                        self.unlockHistory();
+                    });
+                } else if (defaultState) {
+                    return $state.go(defaultState, defaultStateParams).then(function () {
+                        _history_.splice(_history_.indexOf(lastState), 1);
+
+                        self.unlockHistory();
+                    });                    
+                }
 			},
 
 			/**
